@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using MiniBuss;
 
 namespace Receiver
@@ -19,8 +20,9 @@ namespace Receiver
             {
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine(command.Message + " Guid: " + command.Guid + ", Number: " + command.Number);
-
-                bus.Reply(command, new HelloResponse { Guid = Guid.NewGuid(), Message = "Hello back!" });
+                Thread.Sleep(2000);
+                bus.Reply(command, new HelloResponse { Guid = Guid.NewGuid(), Message = "Hello back! " + command.Number });
+                
             });
 
             bus.Start();

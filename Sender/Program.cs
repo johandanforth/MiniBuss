@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Messages;
 using MiniBuss;
@@ -16,7 +17,7 @@ namespace Sender
             bus.RegisterMessageHandler<HelloResponse>(reply =>
                     {
                         Console.ForegroundColor = ConsoleColor.Cyan;
-                        Console.WriteLine("Reply from receiver: " + reply.Message);
+                        Console.WriteLine("Reply from receiver should not be called: " + reply.Message);
                     });
 
             bus.Start();    //start bus if expecting replies
@@ -26,17 +27,25 @@ namespace Sender
             Console.WriteLine("Working, press ENTER to exit");
             Console.ReadLine();
         }
-
+        private static ManualResetEvent wait = new ManualResetEvent(false);
         private static void SendThread(IServiceBus bus)
         {
             var random = new Random();
 
             for (var i = 0; i < 1000; i++)
             {
+                wait.Reset();
                 var guid = Guid.NewGuid();
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Sending command with guid " + guid);
-                bus.Send(new HelloCommand { Guid = Guid.NewGuid(), Message = "Hello", Number = random.Next() });
+                bus.Send(new HelloCommand { Guid = Guid.NewGuid(), Message = "Hello", Number = random.Next() }).Register
+                    <HelloResponse>(x =>
+                                        {
+                                            Console.ForegroundColor = ConsoleColor.Red;
+                                            Console.WriteLine("Reply from receiver: " + x.Message);
+                                            wait.Set();
+                                        });
+                wait.WaitOne(TimeSpan.FromSeconds(10));
             }
             Console.WriteLine("Done!");
         }
