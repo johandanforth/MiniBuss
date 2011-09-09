@@ -50,6 +50,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BusAsyncResult.cs" />
+    <Compile Include="BusAsyncResultEventArgs.cs" />
+    <Compile Include="Callback.cs" />
+    <Compile Include="ICallback.cs" />
     <Compile Include="ServiceBus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
