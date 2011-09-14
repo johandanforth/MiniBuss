@@ -1,0 +1,29 @@
+# Output directories #
+######################
+[bB]in
+[dD]ebug
+[rR]elease
+[oO]bj
+[bB]uild[aA]rtifacts
+
+# Data #
+########
+[aA]pp_[dD]ata
+
+# Resharper #
+#############
+*.ReSharper
+_ReSharper*
+
+# Local info #
+##############
+*.vssscc
+*.user
+*.suo
+*.vspscc
+*.[pP]ublish.xml
+*mm_cache.bin
+*.sln.cache
+
+
+
