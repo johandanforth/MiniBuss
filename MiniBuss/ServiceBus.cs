@@ -9,7 +9,7 @@ using System.Transactions;
 
 namespace MiniBuss
 {
-    public interface IServiceBus
+    public partial interface IServiceBus
     {
         void RegisterMessageHandler<TCommand>(Action<TCommand> handler) where TCommand : class;
         void RegisterMessageEndpoint<TCommand>(string targetEndpoint) where TCommand : class;
@@ -28,7 +28,7 @@ namespace MiniBuss
         string LocalEndpoint { get; set; }
     }
 
-    public class ServiceBus : IServiceBus
+    public partial class ServiceBus : IServiceBus
     {
         private readonly ConcurrentDictionary<RuntimeTypeHandle, string> _replyQueues = new ConcurrentDictionary<RuntimeTypeHandle, string>();
         private readonly ConcurrentDictionary<RuntimeTypeHandle, string> _targetQueues = new ConcurrentDictionary<RuntimeTypeHandle, string>();
