@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading;
-using System.Threading.Tasks;
 using Messages;
 using SocketBus;
 
@@ -13,7 +12,6 @@ namespace SocketBusClient
 
         private static void Main(string[] args)
         {
-
             ThreadPool.QueueUserWorkItem(BusThread);
 
             BusStarted.WaitOne();
@@ -27,7 +25,7 @@ namespace SocketBusClient
         private static void BusThread(object state)
         {
             _bus = new SocketServiceBusClient("localhost:11000");
-            _bus.RegisterMessageHandler<PingMessage>(ping => Console.WriteLine("Got a ping!"));
+            _bus.RegisterMessageHandler<PingMessage>(ping => Console.WriteLine("Got ping"));
             _bus.Start();
 
             //notify that we're ready
@@ -36,12 +34,16 @@ namespace SocketBusClient
 
         private static void SendHelloMessages()
         {
-            _bus.Send(new HelloMessage() {Guid = Guid.NewGuid(), Message = "Hello 1 from client", Number = 1});
-            _bus.Send(new HelloMessage() {Guid = Guid.NewGuid(), Message = "Hello 2 from client", Number = 2});
-            _bus.Send(new HelloMessage() {Guid = Guid.NewGuid(), Message = "Hello 3 from client", Number = 3});
-            _bus.Send(new HelloMessage() {Guid = Guid.NewGuid(), Message = "Hello 4 from client", Number = 4});
+            for (var i = 0; i < 10000; i++)
+            {
+                _bus.Send(new HelloMessage
+                {
+                    Guid = Guid.NewGuid(),
+                    Message = "Hello " + i + " from client",
+                    Number = i
+                });
+            }
         }
-      
     }
 
     public class HelloMessage : Message<HelloMessage>

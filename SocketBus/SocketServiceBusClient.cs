@@ -23,6 +23,8 @@ namespace SocketBus
 
         public void Start()
         {
+            ConsoleInfo("Starting client, connecting to " + _remoteEndpoint);
+
             var index = _remoteEndpoint.IndexOf(":", StringComparison.Ordinal);
             var hostname = _remoteEndpoint.Substring(0, index);
             var port = Convert.ToInt32(_remoteEndpoint.Substring(index + 1));
@@ -76,7 +78,7 @@ namespace SocketBus
                 // Complete the connection.
                 client.EndConnect(ar);
 
-                Console.WriteLine("Connected to {0}", client.RemoteEndPoint);
+                ConsoleInfo("Connected to " + client.RemoteEndPoint);
 
                 // Signal that the connection has been made.
                 ConnectDone.Set();
@@ -105,9 +107,9 @@ namespace SocketBus
 
         protected override void HandleLostConnection(Socket socket, SocketException se)
         {
-            Console.WriteLine("Client lost connection with server! " + se.Message);
+            ConsoleError("Client lost connection with server! " + se.Message);
             Thread.Sleep(1000);
-            Console.WriteLine("Reconnecting...");
+            ConsoleInfo("Reconnecting...");
             Start();
         }
     }

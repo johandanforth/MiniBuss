@@ -18,6 +18,21 @@ namespace SocketBus
 
         private static readonly ManualResetEvent SendDone = new ManualResetEvent(false);
 
+         protected static void ConsoleInfo(string text)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine(text);
+            Console.ResetColor();
+        }
+
+        protected static void ConsoleError(string text)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(text);
+            Console.ResetColor();
+        }
+
+
         public void RegisterMessageHandler<TMessage>(Action<TMessage> handler) where TMessage : class
         {
             var name = typeof (TMessage).Name;
@@ -135,7 +150,7 @@ namespace SocketBus
 
                 // Complete sending the data to the remote device.
                 var bytesSent = client.EndSend(ar);
-                Console.WriteLine("Sent {0} bytes.", bytesSent);
+                ConsoleInfo("Sent " + bytesSent +" bytes.");
 
                 // Signal that all bytes have been sent.
                 SendDone.Set();

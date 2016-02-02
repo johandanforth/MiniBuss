@@ -35,8 +35,10 @@ namespace SocketBus
             Parallel.ForEach(connectedSockets, socket => Send(socket, message));
         }
 
-        public void Start()
+       public void Start()
         {
+            ConsoleInfo("Starting socket server on " + _localEndpoint);
+
             var index = _localEndpoint.IndexOf(":", StringComparison.Ordinal);
             var hostname = _localEndpoint.Substring(0, index);
             var port = Convert.ToInt32(_localEndpoint.Substring(index + 1));
@@ -83,13 +85,16 @@ namespace SocketBus
 
         public void Stop()
         {
+            ConsoleInfo("Stopping server..");
+
             _listener.Shutdown(SocketShutdown.Both);
             _listener.Close();
         }
 
         protected override void HandleLostConnection(Socket socket, SocketException se)
         {
-            Console.WriteLine("Server lost connection with client! " + se.Message);
+            
+            ConsoleError("Server lost connection with client! " + se.Message);
             Connections.Remove(socket);
         }
 

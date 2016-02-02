@@ -24,6 +24,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocketBusServer", "SocketBusServer\SocketBusServer.csproj", "{2E45944E-864D-4E73-AAD7-1C1FE5087E95}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{68CD3B56-DB74-41CB-864C-0AC9A09D81AF}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

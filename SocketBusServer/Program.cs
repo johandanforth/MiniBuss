@@ -24,7 +24,7 @@ namespace SocketBusServer
         {
             _aTimer = new Timer();
             _aTimer.Elapsed += OnTimedEvent;
-            _aTimer.Interval = 5000;
+            _aTimer.Interval = 500;
             _aTimer.Enabled = true;
             _aTimer.Start();
         }
