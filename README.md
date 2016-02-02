@@ -1,15 +1,8 @@
 # MiniBuss
-{project:description}
-
-# Source Repository at GitHub
-The lastest source code for MiniBuss is managed at GitHub - [url:https://github.com/johandanforth/MiniBuss] but this will the place for tracking issues, discussions, documentation and so on for now. *If you want to fork the project, do it from GitHub*
+MiniBuss is a micro service bus on top of MSMQ and fits within a single source file.
 
 # Important
-*NOTE that MiniBuss is still a work in progress and even though it is being used in production, all features has not yet been fully tested under stress and in multi-threaded scenarios. Until then it's not recomended to use this code in production.*
-
-## News / changes
-*sept 6 - 2011* Moved source repository over to GitHub [url:https://github.com/johandanforth/MiniBuss]
-*sept 1 - 2011* Removed dependency on IMessage for commands and events
+*NOTE that MiniBuss is still a work in progress and even though it is being used in production, be careful and test, test, test. 
 
 ## Installing
 MiniBuss is best downloaded from *NuGet*, and currently there is only one package - MiniBuss. From the Package Manager Console type:
@@ -19,7 +12,7 @@ PM> Install-Package MiniBuss
 ```
 This will create a new folder in your project called "MiniBuss" with a single file in it called ServiceBus.cs which contains all the source. The package will also add references to 2 additional .NET libraries; _System.Messaging_ and _System.Transactions_.
 
-You may also download the single source file [url:ServiceBus.cs|http://minibuss.codeplex.com/SourceControl/changeset/view/69523#1515663] from the source code, but remember to add references to System.Messaging and System.Transactions.
+If installing the repo source, remember to add references to System.Messaging and System.Transactions.
 
 ## Getting Started
 The best way to get started may be to download the solution from the source code which contains a number of very simple projects for send/receive and publish/subscribe# The samples below are taken from the sample code.
@@ -37,7 +30,8 @@ Setting up a receiver may look something like this:
 
 ```
 var bus = new ServiceBus { LocalEndpoint = "minibuss_receiver1" };
-bus.RegisterMessageHandler<HelloCommand>(command => Console.WriteLine(command.Message + " Guid: " + command.Guid));
+bus.RegisterMessageHandler<HelloCommand>(command => 
+    Console.WriteLine(command.Message + " Guid: " + command.Guid));
 bus.Start();
 ```
 Create the bus and tell it which endpoint to listen to (which creates a local MSMQ queue if necessary) and tell it which message type to listen 
@@ -48,7 +42,8 @@ Similarly, when doing a receive/reply, you would have to create the bus on the s
 ```
 var bus = new ServiceBus { LocalEndpoint = "minibuss_sender1" };
 bus.RegisterMessageEndpoint<HelloCommand>("minibuss_receiver1@johan-dell-ssd");
-bus.RegisterMessageHandler<HelloResponse>(reply => Console.WriteLine("Reply from receiver: " + reply.Message));
+bus.RegisterMessageHandler<HelloResponse>(reply => 
+    Console.WriteLine("Reply from receiver: " + reply.Message));
 bus.Start();
 
 Console.WriteLine("Sending command...");
