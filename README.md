@@ -2,12 +2,12 @@
 MiniBuss is a micro service bus on top of MSMQ and fits within a single source file.
 
 # Important
-*NOTE that MiniBuss is still a work in progress and even though it is being used in production, be careful and test, test, test. *
+*NOTE that MiniBuss is still a work in progress and even though it is being used in production, be careful and test, test, test.*
 
 ## Installing
 MiniBuss is best downloaded from *NuGet*, and currently there is only one package - MiniBuss. From the Package Manager Console type:
 
-```
+```cs
 PM> Install-Package MiniBuss
 ```
 This will create a new folder in your project called "MiniBuss" with a single file in it called ServiceBus.cs which contains all the source. The package will also add references to 2 additional .NET libraries; _System.Messaging_ and _System.Transactions_.
@@ -19,7 +19,7 @@ The best way to get started may be to download the solution from the source code
 
 Setting up a sender may look something like this:
 
-```
+```cs
 var bus = new ServiceBus();
 bus.RegisterMessageEndpoint<HelloCommand>("minibuss_receiver1@johan-dell-ssd");
 bus.Send(new HelloCommand { Guid = Guid.NewGuid(), Message = "Hello" });
@@ -28,7 +28,7 @@ Create the bus, register a message and tell it where messages of this type shoul
 
 Setting up a receiver may look something like this:
 
-```
+```cs
 var bus = new ServiceBus { LocalEndpoint = "minibuss_receiver1" };
 bus.RegisterMessageHandler<HelloCommand>(command => 
     Console.WriteLine(command.Message + " Guid: " + command.Guid));
@@ -39,7 +39,7 @@ for and which delegate to kick off when such a message is received.
 
 Similarly, when doing a receive/reply, you would have to create the bus on the sender side with a local endpoint and register a message-handler for replies, like this:
 
-```
+```cs
 var bus = new ServiceBus { LocalEndpoint = "minibuss_sender1" };
 bus.RegisterMessageEndpoint<HelloCommand>("minibuss_receiver1@johan-dell-ssd");
 bus.RegisterMessageHandler<HelloResponse>(reply => 
@@ -51,7 +51,7 @@ bus.Send(new HelloCommand { Guid = Guid.NewGuid(), Message = "Hello" });
 ```
 The receiver would do a bus.reply() like this:
 
-```
+```cs
 var bus = new ServiceBus { LocalEndpoint = "minibuss_receiver1" };
 bus.RegisterMessageHandler<HelloCommand>(command =>
  {
@@ -63,7 +63,7 @@ bus.Start();
 ```
 The MiniBus also supports publish to multiple subscribers. A simple publisher would create a bus with a local endpoint (to receive subscribe/unsubscribe commands), tell it to handle subscriptions for a certain event, then start publishing something every 5 seconds (as an example):
 
-```
+```cs
 var bus = new ServiceBus { LocalEndpoint = "minibuss_publisher1" };
 bus.HandleSubscriptionsFor<SomethingHappenedEvent>();
 bus.Start();    
@@ -84,9 +84,9 @@ private static void PublishingThread(IServiceBus bus)
      }
  }
 ```
-Any clients interesting in subscribing to events from the publisher would create a bus with a local endpoint, start the bus and then send a subscribe command to the publisher, telling it you’re interested in subscribing to a certain type of event and which delegate to handle it:
+Any clients interesting in subscribing to events from the publisher would create a bus with a local endpoint, start the bus and then send a subscribe command to the publisher, telling it youâ€™re interested in subscribing to a certain type of event and which delegate to handle it:
 
-```
+```cs
 var bus = new ServiceBus {LocalEndpoint = "minibuss_subscriber1"};
 bus.Start();
 
@@ -107,18 +107,18 @@ If there's an exception in a message handler, the message will be moved to an xx
 MiniBuss supports use of TransactionScope() if the underlying MSMQ queue is transactional. When the service bus is started, MiniBuss will always create a transactional MSMQ queue if the queue doesn't already exist.
 ## Endpoints
 When creating an endpoint, you're always working on your local computer localhost using a syntax like this:
-```
+```cs
 var bus = new ServiceBus { LocalEndpoint = "MyEndpoint" };
 ```
 This will create a local private queue called your-computer-name\private$\MyEndoint
 
 When telling a message/command to go to an endpoint on the same/local machine:
-```
+```cs
 bus.RegisterMessageEndpoint<HelloCommand>("MyEndpoint");
 //or
 bus.RegisterMessageEndpoint<HelloCommand>("MyEndpoint@localhost");
 ```
 or if you want to send a message/command to a remote endpoint:
-```
+```cs
 bus.RegisterMessageEndpoint<HelloCommand>("MyEndpoint@some-other-computer");
 ```
