@@ -2,7 +2,7 @@
 MiniBuss is a micro service bus on top of MSMQ and fits within a single source file.
 
 # Important
-*NOTE that MiniBuss is still a work in progress and even though it is being used in production, be careful and test, test, test. 
+*NOTE that MiniBuss is still a work in progress and even though it is being used in production, be careful and test, test, test. *
 
 ## Installing
 MiniBuss is best downloaded from *NuGet*, and currently there is only one package - MiniBuss. From the Package Manager Console type:
